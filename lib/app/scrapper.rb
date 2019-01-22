@@ -70,15 +70,18 @@ end
 
 def write_json
 
-    File.open("../../db/mairie.json","w") do |f|
+    File.open("db/mairie.json","w") do |f|
     f.write(JSON.pretty_generate(big_array))
 
 end
+end
+
+def write_googledrive
+
+
 
 end
 
-scrap = Scrapping.new
-scrap.write_json
 
 
 end

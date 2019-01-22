@@ -80,9 +80,6 @@ end
 
 
 
-
-
-
 def save_as_spreadsheet
 
 
@@ -107,28 +104,17 @@ def save_as_spreadsheet
   towns = get_townhall_urls
 
 
-  i=0
+
   k=1
   towns.each do |town|
 
       ws[k, 1] = town.keys[0]
       ws[k, 2] = get_townhall_email(town.values[0])
-      i += 1
       k += 1
+
   end
 
   ws.save
-
-
-  # Dumps all cells.
-  (1..ws.num_rows).each do |row|
-    (1..ws.num_cols).each do |col|
-      p ws[row, col]
-    end
-  end
-
-  # Yet another way to do so.
-  p ws.rows  #==> [["fuga", ""], ["foo", "bar]]
 
   # Reloads the worksheet to get changes by other clients.
   ws.reload

@@ -8,3 +8,4 @@ require 'app/scrapper'
 scrap = Scrapping.new
 #scrap.save_as_json
 scrap.save_as_spreadsheet
+#scrap.save_as_csv

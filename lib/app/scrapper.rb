@@ -4,7 +4,8 @@ require 'nokogiri'
 require 'rubygems'
 require 'open-uri'
 require 'json'
-require "google_drive"
+require 'google_drive'
+require 'csv'
 
 class Scrapping
 
@@ -103,19 +104,6 @@ def save_as_spreadsheet
   # Changes content of cells.
   # Changes are not sent to the server until you call ws.save().
 
-=begin
-test_array =[0,1,2,3,4,5,6,7,8,9,10]
-
-for i in 1..test_array.length-1
-
-  ws[i, 1] = test_array[i]
-  ws.save
-
-end
-
-=end
-
-
   towns = get_townhall_urls
 
 
@@ -127,12 +115,10 @@ end
       ws[k, 2] = get_townhall_email(town.values[0])
       i += 1
       k += 1
-
-
   end
 
   ws.save
-  
+
 
   # Dumps all cells.
   (1..ws.num_rows).each do |row|
@@ -151,7 +137,23 @@ end
 end
 
 
+def save_as_csv
 
+    i = 1
+    towns = get_townhall_urls
+		CSV.open("db/email.csv", "wb") do |f|
+
+      towns.each do |town|
+
+           f << [i,town.keys[0],get_townhall_email(town.values[0])]
+           i += 1
+
+      end
+
+
+   end
+
+end
 
 
 end

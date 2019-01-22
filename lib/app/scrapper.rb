@@ -4,6 +4,7 @@ require 'nokogiri'
 require 'rubygems'
 require 'open-uri'
 require 'json'
+require "google_drive"
 
 class Scrapping
 
@@ -68,19 +69,88 @@ return a
 
 end
 
-def write_json
+def save_as_json
 
     File.open("db/mairie.json","w") do |f|
     f.write(JSON.pretty_generate(big_array))
+    end
 
 end
+
+
+
+
+
+
+def save_as_spreadsheet
+
+
+
+  # Creates a session. This will prompt the credential via command line for the
+  # first time and save it to config.json file for later usages.
+  # See this document to learn how to create config.json:
+  # https://github.com/gimite/google-drive-ruby/blob/master/doc/authorization.md
+  session = GoogleDrive::Session.from_config("config.json")
+
+  # First worksheet of
+  # https://docs.google.com/spreadsheet/ccc?key=pz7XtlQC-PYx-jrVMJErTcg
+  # Or https://docs.google.com/a/someone.com/spreadsheets/d/pz7XtlQC-PYx-jrVMJErTcg/edit?usp=drive_web
+  ws = session.spreadsheet_by_key("1rnQonRuv3981rz9SbnYofjfdQBUG5iUMo-91ne7e-mU").worksheets[0]
+
+  # Gets content of A2 cell.
+  p ws[2, 1]  #==> "hoge"
+
+  # Changes content of cells.
+  # Changes are not sent to the server until you call ws.save().
+
+=begin
+test_array =[0,1,2,3,4,5,6,7,8,9,10]
+
+for i in 1..test_array.length-1
+
+  ws[i, 1] = test_array[i]
+  ws.save
+
 end
 
-def write_googledrive
+=end
 
+
+  towns = get_townhall_urls
+
+
+  i=0
+  k=1
+  towns.each do |town|
+
+      ws[k, 1] = town.keys[0]
+      ws[k, 2] = get_townhall_email(town.values[0])
+      i += 1
+      k += 1
+
+
+  end
+
+  ws.save
+  
+
+  # Dumps all cells.
+  (1..ws.num_rows).each do |row|
+    (1..ws.num_cols).each do |col|
+      p ws[row, col]
+    end
+  end
+
+  # Yet another way to do so.
+  p ws.rows  #==> [["fuga", ""], ["foo", "bar]]
+
+  # Reloads the worksheet to get changes by other clients.
+  ws.reload
 
 
 end
+
+
 
 
 

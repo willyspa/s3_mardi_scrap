@@ -6,4 +6,5 @@ require 'app/scrapper'
 #require 'views/fichier_2'
 
 scrap = Scrapping.new
-scrap.write_json
+#scrap.save_as_json
+scrap.save_as_spreadsheet
